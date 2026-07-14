@@ -31,6 +31,7 @@ export default defineConfig({
           label: "Guides",
           items: [
             { label: "Backups", slug: "backups" },
+            { label: "Deploying with Cloudflare D1", slug: "deploying-with-d1" },
             { label: "Search", slug: "search" },
             { label: "Archiving", slug: "archiving" },
             { label: "Auto Tagging", slug: "auto-tagging" },

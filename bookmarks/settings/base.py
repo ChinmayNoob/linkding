@@ -278,6 +278,27 @@ if LD_DB_ENGINE == "postgres":
         "PORT": LD_DB_PORT,
         "OPTIONS": LD_DB_OPTIONS,
     }
+elif LD_DB_ENGINE == "d1":
+    # Cloudflare D1, accessed through the D1 HTTP API
+    LD_CF_ACCOUNT_ID = os.getenv("LD_CF_ACCOUNT_ID") or os.getenv(
+        "CLOUDFLARE_ACCOUNT_ID"
+    )
+    LD_CF_D1_DATABASE_ID = os.getenv("LD_CF_D1_DATABASE_ID") or os.getenv(
+        "CLOUDFLARE_D1_DATABASE_ID"
+    )
+    LD_CF_API_TOKEN = os.getenv("LD_CF_API_TOKEN") or os.getenv("CLOUDFLARE_API_TOKEN")
+    default_database = {
+        "ENGINE": "bookmarks.d1_backend",
+        "NAME": LD_CF_D1_DATABASE_ID,
+        "OPTIONS": {
+            "account_id": LD_CF_ACCOUNT_ID,
+            "database_id": LD_CF_D1_DATABASE_ID,
+            "api_token": LD_CF_API_TOKEN,
+            # Overridable API base URL, mainly for testing
+            "api_url": os.getenv("LD_CF_API_URL"),
+            **LD_DB_OPTIONS,
+        },
+    }
 else:
     default_database = {
         "ENGINE": "django.db.backends.sqlite3",

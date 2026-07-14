@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: linkding
+    runtime: docker
+    dockerfilePath: docker/default.Dockerfile
+    dockerContext: .
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: LD_DB_ENGINE
+        value: d1
+      - key: LD_CF_ACCOUNT_ID
+        sync: false
+      - key: LD_CF_D1_DATABASE_ID
+        sync: false
+      - key: LD_CF_API_TOKEN
+        sync: false
+      - key: LD_SUPERUSER_NAME
+        sync: false
+      - key: LD_SUPERUSER_PASSWORD
+        sync: false
+    disk:
+      name: linkding-data
+      mountPath: /etc/linkding/data
+      sizeGB: 1

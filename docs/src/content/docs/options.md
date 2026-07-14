@@ -306,12 +306,13 @@ Set uWSGI [log-x-forwarded-for](https://uwsgi-docs.readthedocs.io/en/latest/Opti
 
 ### `LD_DB_ENGINE`
 
-Values: `postgres` or `sqlite` | Default = `sqlite`
+Values: `postgres`, `sqlite`, or `d1` | Default = `sqlite`
 
 Database engine used by linkding to store data.
-Currently, linkding supports SQLite and PostgreSQL.
+Currently, linkding supports SQLite, PostgreSQL, and Cloudflare D1.
 By default, linkding uses SQLite, for which you don't need to configure anything.
 All the other database variables below are only required for configured PostgresSQL.
+For Cloudflare D1, see the `LD_CF_*` variables further below instead.
 
 ### `LD_DB_DATABASE`
 
@@ -350,6 +351,29 @@ Should use the default port if left empty, for example `5432` for PostgresSQL.
 Values: `String` | Default = `{}`
 
 A json string with additional options for the database. Passed directly to OPTIONS.
+
+### `LD_CF_ACCOUNT_ID`
+
+Values: `String` | Default = None
+
+Your Cloudflare account ID. Required when `LD_DB_ENGINE` is set to `d1`.
+Also read from `CLOUDFLARE_ACCOUNT_ID` if set.
+
+### `LD_CF_D1_DATABASE_ID`
+
+Values: `String` | Default = None
+
+The ID (UUID) of the Cloudflare D1 database to use, as shown in the Cloudflare dashboard or `wrangler d1 list`.
+Required when `LD_DB_ENGINE` is set to `d1`.
+Also read from `CLOUDFLARE_D1_DATABASE_ID` if set.
+
+### `LD_CF_API_TOKEN`
+
+Values: `String` | Default = None
+
+A Cloudflare API token with `D1:Edit` permission for the account, used to access the database over the D1 HTTP API.
+Required when `LD_DB_ENGINE` is set to `d1`.
+Also read from `CLOUDFLARE_API_TOKEN` if set.
 
 ### `LD_FAVICON_PROVIDER`
 

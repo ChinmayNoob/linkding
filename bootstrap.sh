@@ -2,7 +2,9 @@
 # Bootstrap script that gets executed in new Docker containers
 
 LD_SERVER_HOST="${LD_SERVER_HOST:-[::]}"
-LD_SERVER_PORT="${LD_SERVER_PORT:-9090}"
+# Fall back to the PORT variable injected by platforms like Render or Railway,
+# so the same image can be deployed there without extra configuration.
+LD_SERVER_PORT="${LD_SERVER_PORT:-${PORT:-9090}}"
 
 # Create data folder if it does not exist
 mkdir -p data
