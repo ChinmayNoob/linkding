@@ -47,7 +47,7 @@ Everything else (favicons, preview images, HTML snapshots) is still stored on th
 This repository includes a `render.yaml` [Blueprint](https://render.com/docs/blueprint-spec) for a Render **web service** on the **free** plan (`plan: free`), which prompts for the D1 credentials during setup.
 
 1. Fork or use this repository directly.
-2. In the Render dashboard, choose **New > Blueprint** and select the repository.
+2. In the Render dashboard, choose **New > Blueprint** (not "New > Web Service", which ignores `render.yaml`) and select the repository.
 3. Fill in the `LD_CF_*` and `LD_SUPERUSER_*` values when prompted.
 
 Render automatically sets a `PORT` environment variable that the container will bind to.
@@ -56,9 +56,11 @@ Render automatically sets a `PORT` environment variable that the container will 
 Render's free plan doesn't support persistent disks, so the local `data` folder (favicons, previews, HTML snapshots) resets on every restart or redeploy — your bookmarks/tags/users in D1 are unaffected. Upgrade to a paid plan and add a `disk:` block to `render.yaml` if you need those local files to persist too. The free plan also spins the service down after 15 minutes of inactivity.
 :::
 
+Both `render.yaml` and `railway.json` build `docker/deploy.Dockerfile` rather than `docker/default.Dockerfile`. The default Dockerfile has an extra `linkding-plus` stage (Chromium + uBlock, for HTML snapshotting) after the plain `linkding` stage; since these platforms build with a plain `docker build` and no `--target` flag, they'd build that extra stage too if pointed at the default Dockerfile. `docker/deploy.Dockerfile` is identical up through the `linkding` stage, minus that extra one.
+
 ## Deploying to Railway (free trial, no volume needed)
 
-This repository includes a `railway.json` config that points Railway at `docker/default.Dockerfile`. It runs fine on Railway's free trial without attaching a volume, since bookmark data lives in D1 rather than on local disk.
+This repository includes a `railway.json` config that points Railway at `docker/deploy.Dockerfile`. It runs fine on Railway's free trial without attaching a volume, since bookmark data lives in D1 rather than on local disk.
 
 1. Create a new Railway project from this repository (or a fork of it).
 2. Railway detects `railway.json` and builds the Dockerfile automatically.

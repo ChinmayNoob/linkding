@@ -2,7 +2,12 @@ services:
   - type: web
     name: linkding
     runtime: docker
-    dockerfilePath: docker/default.Dockerfile
+    # Render always builds the last stage in a Dockerfile and has no
+    # equivalent of `docker build --target`, so this uses a trimmed
+    # Dockerfile that stops at the plain `linkding` stage instead of
+    # docker/default.Dockerfile, which also builds the extra `linkding-plus`
+    # (Chromium/snapshot) stage that isn't needed here.
+    dockerfilePath: docker/deploy.Dockerfile
     dockerContext: .
     # Free plan: no persistent disk available, so the data folder (favicons,
     # preview images, HTML snapshots) is ephemeral and reset on every restart

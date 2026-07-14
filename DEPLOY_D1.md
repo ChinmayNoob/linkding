@@ -79,6 +79,15 @@ The repo's `render.yaml` [Blueprint](https://render.com/docs/blueprint-spec) is
 configured for Render's **free** web service plan (`plan: free`), so this costs
 nothing to run.
 
+:::note
+Use **New > Blueprint**, not **New > Web Service**. The Web Service wizard
+ignores `render.yaml` entirely and tries to auto-detect a runtime from your
+repo (it will likely guess "Python" and ask for a Build/Start Command) —
+that path skips the Docker build linkding actually needs. The Blueprint flow
+is what picks up `render.yaml` and configures Docker, the free plan, and the
+D1 env var prompts automatically.
+:::
+
 1. Push this repository (or your fork of it) to GitHub/GitLab.
 2. In the [Render dashboard](https://dashboard.render.com), click **New > Blueprint**.
 3. Select the repository. Render will detect `render.yaml`.
@@ -107,10 +116,20 @@ up automatically (no extra config needed — this was wired up in `bootstrap.sh`
 - **750 free instance-hours per month**, which comfortably covers one always-on
   low-traffic service.
 
+Both `render.yaml` and `railway.json` point at `docker/deploy.Dockerfile`
+rather than `docker/default.Dockerfile`. The default Dockerfile has an extra
+`linkding-plus` stage (Chromium + uBlock, for HTML snapshotting) after the
+plain `linkding` stage — since these platforms build whatever Dockerfile
+they're given with a plain `docker build` (no `--target` flag to stop at an
+earlier stage), pointing them at the default Dockerfile would also build that
+extra stage, including a GitHub download that can fail the build for reasons
+unrelated to linkding itself. `docker/deploy.Dockerfile` is identical up
+through the `linkding` stage, just without the extra one.
+
 ## 5. Deploy to Railway (free trial, no volume needed)
 
 The repo includes a `railway.json` config that points Railway at
-`docker/default.Dockerfile`. It deploys and runs fine on Railway's free trial
+`docker/deploy.Dockerfile`. It deploys and runs fine on Railway's free trial
 **without attaching a volume** — since bookmark data lives in D1, not on local
 disk, there's nothing that strictly needs persistent storage to work. Railway's
 config-as-code doesn't support declaring environment variables or volumes, so
