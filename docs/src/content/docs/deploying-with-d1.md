@@ -56,15 +56,17 @@ Render automatically sets a `PORT` environment variable that the container will 
 Render's free plan doesn't support persistent disks, so the local `data` folder (favicons, previews, HTML snapshots) resets on every restart or redeploy — your bookmarks/tags/users in D1 are unaffected. Upgrade to a paid plan and add a `disk:` block to `render.yaml` if you need those local files to persist too. The free plan also spins the service down after 15 minutes of inactivity.
 :::
 
-## Deploying to Railway
+## Deploying to Railway (free trial, no volume needed)
 
-Railway's free trial deletes volumes 30 days after the trial credits expire, and its ongoing free plan only grants $1/month credit, so it isn't a good fit for a long-term free deployment. Prefer Render's free tier above unless you're on a paid Railway plan.
-
-This repository includes a `railway.json` config that points Railway at `docker/default.Dockerfile`.
+This repository includes a `railway.json` config that points Railway at `docker/default.Dockerfile`. It runs fine on Railway's free trial without attaching a volume, since bookmark data lives in D1 rather than on local disk.
 
 1. Create a new Railway project from this repository (or a fork of it).
 2. Railway detects `railway.json` and builds the Dockerfile automatically.
 3. Under the service's **Variables**, set `LD_DB_ENGINE=d1`, `LD_CF_ACCOUNT_ID`, `LD_CF_D1_DATABASE_ID`, and `LD_CF_API_TOKEN`.
-4. On a paid plan, add a [volume](https://docs.railway.com/guides/volumes) mounted at `/etc/linkding/data` so favicons, previews, and snapshots survive deploys.
+4. Deploy — no volume required.
 
 Railway automatically sets a `PORT` environment variable that the container will bind to.
+
+:::note
+Without a volume, the local `data` folder (favicons, previews, HTML snapshots) resets on every restart or redeploy — your bookmarks/tags/users in D1 are unaffected. Railway also deletes any volume created by a trial account 30 days after the trial credits expire, so attaching one wouldn't durably help on the free trial anyway. If you move to a paid plan and want those local files to persist, attach a [volume](https://docs.railway.com/guides/volumes) mounted at `/etc/linkding/data` at that point.
+:::
