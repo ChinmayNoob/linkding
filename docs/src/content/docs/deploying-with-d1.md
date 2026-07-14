@@ -40,11 +40,11 @@ Set the following environment variables:
 
 See the [options reference](/options#ld_cf_account_id) for details.
 
-Everything else (favicons, preview images, HTML snapshots) is still stored on the local filesystem in the `data` folder, so you'll still want to mount a persistent volume for that folder even when using D1 for the database itself.
+Everything else (favicons, preview images, HTML snapshots) is still stored on the local filesystem in the `data` folder, independent of the database backend. See the free tier note below for what that means if you don't attach a persistent volume.
 
-## Deploying to Render
+## Deploying to Render (free tier)
 
-This repository includes a `render.yaml` [Blueprint](https://render.com/docs/blueprint-spec) that deploys the Docker image with a persistent disk mounted at `/etc/linkding/data` and prompts for the D1 credentials during setup.
+This repository includes a `render.yaml` [Blueprint](https://render.com/docs/blueprint-spec) for a Render **web service** on the **free** plan (`plan: free`), which prompts for the D1 credentials during setup.
 
 1. Fork or use this repository directly.
 2. In the Render dashboard, choose **New > Blueprint** and select the repository.
@@ -52,13 +52,19 @@ This repository includes a `render.yaml` [Blueprint](https://render.com/docs/blu
 
 Render automatically sets a `PORT` environment variable that the container will bind to.
 
+:::note
+Render's free plan doesn't support persistent disks, so the local `data` folder (favicons, previews, HTML snapshots) resets on every restart or redeploy — your bookmarks/tags/users in D1 are unaffected. Upgrade to a paid plan and add a `disk:` block to `render.yaml` if you need those local files to persist too. The free plan also spins the service down after 15 minutes of inactivity.
+:::
+
 ## Deploying to Railway
+
+Railway's free trial deletes volumes 30 days after the trial credits expire, and its ongoing free plan only grants $1/month credit, so it isn't a good fit for a long-term free deployment. Prefer Render's free tier above unless you're on a paid Railway plan.
 
 This repository includes a `railway.json` config that points Railway at `docker/default.Dockerfile`.
 
 1. Create a new Railway project from this repository (or a fork of it).
 2. Railway detects `railway.json` and builds the Dockerfile automatically.
 3. Under the service's **Variables**, set `LD_DB_ENGINE=d1`, `LD_CF_ACCOUNT_ID`, `LD_CF_D1_DATABASE_ID`, and `LD_CF_API_TOKEN`.
-4. Add a [volume](https://docs.railway.com/guides/volumes) mounted at `/etc/linkding/data` so favicons, previews, and snapshots survive deploys.
+4. On a paid plan, add a [volume](https://docs.railway.com/guides/volumes) mounted at `/etc/linkding/data` so favicons, previews, and snapshots survive deploys.
 
 Railway automatically sets a `PORT` environment variable that the container will bind to.

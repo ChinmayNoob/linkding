@@ -4,7 +4,12 @@ services:
     runtime: docker
     dockerfilePath: docker/default.Dockerfile
     dockerContext: .
-    plan: starter
+    # Free plan: no persistent disk available, so the data folder (favicons,
+    # preview images, HTML snapshots) is ephemeral and reset on every restart
+    # or redeploy. Bookmark data itself is unaffected since it lives in D1.
+    # Upgrade to a paid plan and add a `disk:` block back if you need those
+    # local files to persist too.
+    plan: free
     healthCheckPath: /health
     envVars:
       - key: LD_DB_ENGINE
@@ -19,7 +24,3 @@ services:
         sync: false
       - key: LD_SUPERUSER_PASSWORD
         sync: false
-    disk:
-      name: linkding-data
-      mountPath: /etc/linkding/data
-      sizeGB: 1
