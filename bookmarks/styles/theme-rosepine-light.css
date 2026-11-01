@@ -1,0 +1,44 @@
+/* Rosé Pine Dawn palette for the light theme, colors from
+   https://rosepinetheme.com/palette as used by threadlockers/linkding */
+@import "theme-light.css";
+
+:root {
+  --gray-50: rgb(250, 244, 237); /* base */
+  --gray-100: rgb(242, 233, 225); /* overlay */
+  --gray-200: rgb(223, 218, 217); /* highlight med */
+  --gray-300: rgb(206, 202, 205); /* highlight high */
+  --gray-400: rgb(152, 147, 165); /* muted */
+  --gray-500: rgb(121, 117, 147); /* subtle */
+  --gray-600: rgb(110, 106, 134);
+  --gray-700: rgb(87, 82, 121); /* text */
+  --gray-800: rgb(57, 53, 82);
+  --gray-900: rgb(35, 33, 54);
+
+  --primary-color: #907aa9; /* iris */
+  --primary-color-highlight: #9d88b3;
+  --primary-color-shade: rgba(144, 122, 169, 0.075);
+
+  --alternative-color: #56949f; /* foam */
+  --alternative-color-dark: #286983; /* pine */
+
+  --success-color: #286983; /* pine */
+  --success-color-highlight: #2f7a98;
+  --success-color-shade: rgba(40, 105, 131, 0.1);
+
+  --warning-color: #ea9d34; /* gold */
+  --warning-color-highlight: #edaa50;
+  --warning-color-shade: rgba(234, 157, 52, 0.1);
+
+  --error-color: #b4637a; /* love */
+  --error-color-highlight: #bd7388;
+  --error-color-shade: rgba(180, 99, 122, 0.1);
+
+  --primary-text-color: #907aa9; /* iris */
+  --secondary-link-color: rgba(144, 122, 169, 0.8);
+
+  --body-color: rgb(250, 244, 237); /* base */
+  --focus-outline: 2px solid #907aa9;
+
+  --modal-container-bg-color: #fffaf3; /* surface */
+  --menu-bg-color: #fffaf3; /* surface */
+}

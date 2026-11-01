@@ -4,15 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('bookmarks', '0055_bookmark_grid_view'),
+        ("bookmarks", "0055_bookmark_grid_view"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='userprofile',
-            name='bookmark_view_mode',
-            field=models.CharField(choices=[('list', 'List'), ('grid', 'Grid'), ('carousel', 'Carousel')], default='list', max_length=10),
+            model_name="userprofile",
+            name="bookmark_view_mode",
+            field=models.CharField(
+                choices=[("list", "List"), ("grid", "Grid"), ("carousel", "Carousel")],
+                default="list",
+                max_length=10,
+            ),
         ),
     ]

@@ -1,0 +1,52 @@
+/* Rosé Pine palette for the dark theme, colors from
+   https://rosepinetheme.com/palette as used by threadlockers/linkding */
+@import "theme-dark.css";
+
+:root {
+  --contrast-5: rgba(224, 222, 244, 0.06);
+  --contrast-10: rgba(224, 222, 244, 0.14);
+  --contrast-20: rgba(224, 222, 244, 0.23);
+  --contrast-30: rgba(224, 222, 244, 0.32);
+  --contrast-40: rgba(224, 222, 244, 0.41);
+  --contrast-50: rgba(224, 222, 244, 0.5);
+  --contrast-60: rgba(224, 222, 244, 0.58);
+  --contrast-70: rgba(224, 222, 244, 0.69);
+  --contrast-80: rgba(224, 222, 244, 0.8);
+  --contrast-90: rgba(224, 222, 244, 0.9);
+
+  --primary-color: #c4a7e7; /* iris */
+  --primary-color-highlight: #d0b8ed;
+  --primary-color-shade: rgba(196, 167, 231, 0.42);
+
+  --alternative-color: #9ccfd8; /* foam */
+  --alternative-color-dark: #b3dbe2;
+
+  --success-color: #31748f; /* pine */
+  --success-color-highlight: #3a87a6;
+  --success-color-shade: rgba(49, 116, 143, 0.1);
+
+  --warning-color: #f6c177; /* gold */
+  --warning-color-highlight: #f8ce92;
+  --warning-color-shade: rgba(246, 193, 119, 0.1);
+
+  --error-color: #eb6f92; /* love */
+  --error-color-highlight: #ee85a3;
+  --error-color-shade: rgba(235, 111, 146, 0.1);
+
+  --text-color: #e0def4; /* text */
+  --secondary-text-color: #908caa; /* subtle */
+  --tertiary-text-color: #6e6a86; /* muted */
+  --primary-text-color: #c4a7e7; /* iris */
+  --secondary-link-color: rgba(196, 167, 231, 0.8);
+
+  --body-color: #191724; /* base */
+  --focus-outline: 2px solid #c4a7e7;
+
+  /* White text needs a darker iris for contrast */
+  --btn-primary-bg-color: #907aa9;
+  --btn-primary-hover-bg-color: #9d88b3;
+
+  --modal-overlay-bg-color: rgba(25, 23, 36, 0.55);
+  --modal-container-bg-color: #1f1d2e; /* surface */
+  --menu-bg-color: #1f1d2e; /* surface */
+}

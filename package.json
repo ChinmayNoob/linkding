@@ -1,10 +1,12 @@
 {
   "name": "linkding",
   "scripts": {
-    "build": "npm run build-js && npm run build-theme-light && npm run build-theme-dark",
+    "build": "npm run build-js && npm run build-theme-light && npm run build-theme-dark && npm run build-theme-rosepine-light && npm run build-theme-rosepine-dark",
     "build-js": "esbuild bookmarks/frontend/index.js --bundle --minify --sourcemap --format=iife --outfile=bookmarks/static/bundle.js",
-    "build-theme-light": "esbuild bookmarks/styles/theme-light.css --bundle --minify --external:*.svg --target=chrome109,firefox115,safari16 --outfile=bookmarks/static/theme-light.css",
-    "build-theme-dark": "esbuild bookmarks/styles/theme-dark.css --bundle --minify --external:*.svg --target=chrome109,firefox115,safari16 --outfile=bookmarks/static/theme-dark.css",
+    "build-theme-light": "esbuild bookmarks/styles/theme-light.css --bundle --minify --external:*.svg --external:*.woff2 --target=chrome109,firefox115,safari16 --outfile=bookmarks/static/theme-light.css",
+    "build-theme-dark": "esbuild bookmarks/styles/theme-dark.css --bundle --minify --external:*.svg --external:*.woff2 --target=chrome109,firefox115,safari16 --outfile=bookmarks/static/theme-dark.css",
+    "build-theme-rosepine-light": "esbuild bookmarks/styles/theme-rosepine-light.css --bundle --minify --external:*.svg --external:*.woff2 --target=chrome109,firefox115,safari16 --outfile=bookmarks/static/theme-rosepine-light.css",
+    "build-theme-rosepine-dark": "esbuild bookmarks/styles/theme-rosepine-dark.css --bundle --minify --external:*.svg --external:*.woff2 --target=chrome109,firefox115,safari16 --outfile=bookmarks/static/theme-rosepine-dark.css",
     "dev": "esbuild bookmarks/frontend/dev.js --bundle --sourcemap --format=iife --outfile=bookmarks/static/bundle.js --watch"
   },
   "dependencies": {

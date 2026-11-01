@@ -310,6 +310,7 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = [
             "theme",
+            "theme_palette",
             "bookmark_date_display",
             "bookmark_description_display",
             "bookmark_description_max_lines",
@@ -340,6 +341,7 @@ class UserProfileForm(forms.ModelForm):
         ]
         widgets = {
             "theme": FormSelect,
+            "theme_palette": FormSelect,
             "bookmark_date_display": FormSelect,
             "bookmark_description_display": FormSelect,
             "bookmark_description_max_lines": FormNumberInput,

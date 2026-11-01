@@ -356,6 +356,12 @@ class UserProfile(models.Model):
         (THEME_LIGHT, "Light"),
         (THEME_DARK, "Dark"),
     ]
+    THEME_PALETTE_DEFAULT = "default"
+    THEME_PALETTE_ROSE_PINE = "rose_pine"
+    THEME_PALETTE_CHOICES = [
+        (THEME_PALETTE_DEFAULT, "Default"),
+        (THEME_PALETTE_ROSE_PINE, "Rosé Pine"),
+    ]
     BOOKMARK_DATE_DISPLAY_RELATIVE = "relative"
     BOOKMARK_DATE_DISPLAY_ABSOLUTE = "absolute"
     BOOKMARK_DATE_DISPLAY_HIDDEN = "hidden"
@@ -405,6 +411,12 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
     theme = models.CharField(
         max_length=10, choices=THEME_CHOICES, blank=False, default=THEME_AUTO
+    )
+    theme_palette = models.CharField(
+        max_length=20,
+        choices=THEME_PALETTE_CHOICES,
+        blank=False,
+        default=THEME_PALETTE_DEFAULT,
     )
     bookmark_date_display = models.CharField(
         max_length=10,
@@ -476,6 +488,18 @@ class UserProfile(models.Model):
     collapse_side_panel = models.BooleanField(default=False, null=False)
     hide_bundles = models.BooleanField(default=False, null=False)
     legacy_search = models.BooleanField(default=False, null=False)
+
+    @property
+    def light_theme_stylesheet(self) -> str:
+        if self.theme_palette == self.THEME_PALETTE_ROSE_PINE:
+            return "theme-rosepine-light.css"
+        return "theme-light.css"
+
+    @property
+    def dark_theme_stylesheet(self) -> str:
+        if self.theme_palette == self.THEME_PALETTE_ROSE_PINE:
+            return "theme-rosepine-dark.css"
+        return "theme-dark.css"
 
     def save(self, *args, **kwargs):
         if self.custom_css:

@@ -27,6 +27,13 @@
           {% endformhelp %}
         </div>
         <div class="form-group">
+          {% formlabel form.theme_palette "Color palette" %}
+          {% formfield form.theme_palette has_help=True class="width-25 width-sm-100" %}
+          {% formhelp form.theme_palette %}
+            The colors used for the light and dark theme.
+          {% endformhelp %}
+        </div>
+        <div class="form-group">
           {% formlabel form.bookmark_date_display "Bookmark date format" %}
           {% formfield form.bookmark_date_display has_help=True class="width-25 width-sm-100" %}
           {% formhelp form.bookmark_date_display %}
