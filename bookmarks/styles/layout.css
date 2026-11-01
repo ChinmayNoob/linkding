@@ -32,3 +32,13 @@ header {
   display: inline-block;
   vertical-align: middle;
 }
+
+/* The theme toggle offers switching to the other theme, the dark theme
+   stylesheet flips which button is visible */
+.theme-toggle .btn {
+  vertical-align: middle;
+}
+
+.theme-toggle-to-light {
+  display: none;
+}

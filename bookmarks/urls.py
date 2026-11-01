@@ -70,6 +70,7 @@ urlpatterns = [
     path("settings", settings_views.general, name="settings.index"),
     path("settings/general", settings_views.general, name="settings.general"),
     path("settings/update", settings_views.update, name="settings.update"),
+    path("settings/theme", settings_views.theme, name="settings.theme"),
     path(
         "settings/integrations",
         settings_views.integrations,

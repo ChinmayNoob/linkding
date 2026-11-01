@@ -8,7 +8,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db.models import prefetch_related_objects
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import (
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseNotAllowed,
+    HttpResponseRedirect,
+)
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -19,10 +24,11 @@ from bookmarks.models import (
     Bookmark,
     FeedToken,
     GlobalSettings,
+    UserProfile,
 )
 from bookmarks.services import exporter, importer, tasks
 from bookmarks.type_defs import HttpRequest
-from bookmarks.utils import app_version
+from bookmarks.utils import app_version, get_safe_return_url
 from bookmarks.views import access
 
 logger = logging.getLogger(__name__)
@@ -96,6 +102,25 @@ def update(request: HttpRequest):
                 )
 
     return HttpResponseRedirect(reverse("linkding:settings.general"))
+
+
+@login_required
+def theme(request: HttpRequest):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    theme = request.POST.get("theme")
+    if theme not in (UserProfile.THEME_LIGHT, UserProfile.THEME_DARK):
+        return HttpResponseBadRequest("Invalid theme")
+
+    profile = request.user_profile
+    profile.theme = theme
+    profile.save(update_fields=["theme"])
+
+    return_url = get_safe_return_url(
+        request.POST.get("return_url"), reverse("linkding:bookmarks.index")
+    )
+    return HttpResponseRedirect(return_url)
 
 
 def update_profile(request: HttpRequest):

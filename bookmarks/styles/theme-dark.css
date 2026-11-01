@@ -148,3 +148,11 @@ ignore this and use whatever users have configured in their system settings. */
 :root {
   color-scheme: dark;
 }
+
+.theme-toggle .theme-toggle-to-light {
+  display: inline-flex;
+}
+
+.theme-toggle .theme-toggle-to-dark {
+  display: none;
+}

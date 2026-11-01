@@ -3,6 +3,7 @@
 {# Basic menu list #}
 <div class="hide-md">
   <span class="nav-username text-muted mr-2">Hello, {{ request.user.username }}!</span>
+  {% include 'shared/theme_toggle.html' %}
   <a href="{% url 'linkding:bookmarks.new' %}"
      class="btn btn-primary mr-2">Add bookmark</a>
   <ld-dropdown class="dropdown">
@@ -55,6 +56,7 @@
 </div>
 {# Menu drop-down for smaller devices #}
 <div class="show-md">
+  {% include 'shared/theme_toggle.html' %}
   <a href="{% url 'linkding:bookmarks.new' %}"
      aria-label="Add bookmark"
      class="btn btn-primary">
