@@ -27,3 +27,8 @@ header {
     line-height: 1.2;
   }
 }
+
+.nav-username {
+  display: inline-block;
+  vertical-align: middle;
+}

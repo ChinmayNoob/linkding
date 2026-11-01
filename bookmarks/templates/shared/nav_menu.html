@@ -2,6 +2,7 @@
 {% htmlmin %}
 {# Basic menu list #}
 <div class="hide-md">
+  <span class="nav-username text-muted mr-2">Hello, {{ request.user.username }}!</span>
   <a href="{% url 'linkding:bookmarks.new' %}"
      class="btn btn-primary mr-2">Add bookmark</a>
   <ld-dropdown class="dropdown">
