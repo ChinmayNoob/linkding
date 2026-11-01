@@ -555,3 +555,11 @@ input {
     font-size: 16px;
   }
 }
+
+/* Inputs with a font size below 16px make mobile Safari zoom in on focus.
+   430px is the viewport width of the largest iPhones. */
+@media screen and (max-width: 430px) {
+  .form-input {
+    font-size: 16px;
+  }
+}
