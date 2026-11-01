@@ -1,5 +1,6 @@
 import re
 import urllib.parse
+from functools import cached_property
 
 from django.conf import settings
 from django.core.paginator import Paginator
@@ -194,6 +195,14 @@ class BookmarkItem:
         )
 
 
+class CarouselGroup:
+    def __init__(self, name: str, query_string: str, is_untagged: bool = False):
+        self.name = name
+        self.query_string = query_string
+        self.is_untagged = is_untagged
+        self.items: list[BookmarkItem] = []
+
+
 class BookmarkListContext:
     request_context = RequestContext
 
@@ -249,6 +258,34 @@ class BookmarkListContext:
             self.view_mode == UserProfile.BOOKMARK_VIEW_MODE_GRID
             and not self.is_preview
         )
+
+    @property
+    def is_carousel(self) -> bool:
+        return (
+            self.view_mode == UserProfile.BOOKMARK_VIEW_MODE_CAROUSEL
+            and not self.is_preview
+        )
+
+    @cached_property
+    def carousel_groups(self) -> list["CarouselGroup"]:
+        # Groups the bookmarks of the current page by tag, a bookmark with
+        # multiple tags shows up in each of their carousels
+        groups_by_key: dict[str, CarouselGroup] = {}
+        untagged_group = CarouselGroup("Untagged", "q=!untagged", is_untagged=True)
+        for item in self.items:
+            if not item.tags:
+                untagged_group.items.append(item)
+                continue
+            for tag in item.tags:
+                key = tag.name.lower()
+                if key not in groups_by_key:
+                    groups_by_key[key] = CarouselGroup(tag.name, tag.query_string)
+                groups_by_key[key].items.append(item)
+
+        groups = sorted(groups_by_key.values(), key=lambda group: group.name.lower())
+        if untagged_group.items:
+            groups.append(untagged_group)
+        return groups
 
     @staticmethod
     def generate_return_url(search: BookmarkSearch, base_url: str, page: int = None):

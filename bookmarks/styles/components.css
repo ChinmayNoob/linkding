@@ -22,6 +22,12 @@
     flex: 1 1 0;
     display: flex;
   }
+
+  .bookmark-count {
+    font-size: var(--font-size);
+    font-weight: normal;
+    margin-left: var(--unit-1);
+  }
 }
 
 @media (max-width: 600px) {

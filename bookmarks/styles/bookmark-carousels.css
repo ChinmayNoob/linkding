@@ -1,0 +1,198 @@
+@media (min-width: 841px) {
+  :root {
+    --carousel-card-width: 240px;
+  }
+}
+
+@media (min-width: 1101px) {
+  :root {
+    --carousel-card-width: 260px;
+  }
+}
+
+@media (min-width: 1501px) {
+  :root {
+    --carousel-card-width: 280px;
+  }
+}
+
+/* Let the bookmarks index use more of the viewport when the carousel layout
+   is active. The rest of the app keeps its narrower reading-width container. */
+@media (min-width: 841px) {
+  body:has(.bookmark-carousels) :is(header, .content).container {
+    max-width: none;
+  }
+
+  /* Pin the side panel to a fixed width so main (and its carousels) can grow
+     with the viewport instead of keeping 1/3 of the container reserved for
+     tags. minmax(0, 1fr) on main prevents grid children from forcing overflow,
+     matching the safety net the default `.grid > *` rule provides. */
+  .bookmarks-page:has(.bookmark-carousels) {
+    grid-template-columns: minmax(0, 1fr) 18rem;
+  }
+
+  .bookmarks-page:has(.bookmark-carousels) > main.col-2,
+  .bookmarks-page:has(.bookmark-carousels) > .side-panel.col-1 {
+    grid-column: auto;
+  }
+}
+
+.bookmark-carousels {
+  margin-top: var(--unit-4);
+}
+
+.carousel-group {
+  margin-bottom: var(--unit-6);
+
+  & > ul.bookmark-list.carousel + ul.bookmark-list.carousel {
+    margin-top: var(--unit-3);
+  }
+
+  & .carousel-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--unit-2);
+    margin-bottom: var(--unit-2);
+  }
+
+  & .carousel-header h2 {
+    margin: 0;
+    font-size: var(--font-size-lg);
+    line-height: 1.2;
+  }
+
+  & .carousel-header h2 a {
+    color: var(--alternative-color);
+    text-decoration: none;
+  }
+
+  & .carousel-header h2 a:hover,
+  & .carousel-header h2 a:focus {
+    text-decoration: underline;
+  }
+
+  & .carousel-count {
+    color: var(--secondary-text-color);
+    font-size: var(--font-size-sm);
+  }
+}
+
+ul.bookmark-list.carousel {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--carousel-card-width, 240px);
+  gap: var(--unit-3);
+  overflow-x: auto;
+  /* Proximity snapping so JS-driven wheel scrolling doesn't fight mandatory
+     snap points on every tick. */
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  padding-bottom: var(--unit-2);
+  margin: 0;
+  /* Hint the browser we'll be scrolling this on wheel events. */
+  overscroll-behavior-x: contain;
+  /* Used by the JS overscroll stretch effect. The `.overscrolling` class
+     disables the transition while the user is actively driving it; removing
+     the class animates the transform back to 0. */
+  transition: transform 220ms ease-out;
+  will-change: transform;
+
+  &.overscrolling {
+    transition: none;
+  }
+
+  /* Override the row layout used by the flat list so cards stack vertically. */
+  > li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--unit-2);
+    margin: 0;
+    padding: var(--unit-2);
+    border: 1px solid var(--secondary-border-color);
+    border-radius: var(--border-radius);
+    background: var(--body-color);
+    scroll-snap-align: start;
+    overflow: hidden;
+  }
+
+  > li .card-preview {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background: var(--body-color-contrast);
+  }
+
+  > li .card-preview a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  > li .card-preview .preview-image {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    object-fit: cover;
+  }
+
+  > li .card-preview .preview-image.placeholder {
+    width: 100%;
+    height: 100%;
+  }
+
+  > li .content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--unit-1);
+    min-width: 0;
+  }
+
+  > li .title a {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.25;
+  }
+
+  > li .description.card-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: var(--font-size-sm);
+  }
+
+  > li .tags {
+    font-size: var(--font-size-sm);
+  }
+
+  > li .actions {
+    margin-top: auto;
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Bulk edit layout adjustments for cards: surface the per-bookmark checkbox
+   inside the card title row instead of the absolute-positioned gutter the
+   flat list uses. */
+ld-bookmark-page ul.bookmark-list.carousel {
+  & .form-checkbox.bulk-edit-checkbox:not(.all) {
+    position: static;
+    transform: none;
+    left: auto;
+    top: auto;
+    margin-right: var(--unit-1);
+  }
+}
+
+ld-bookmark-page.active ul.bookmark-list.carousel > li {
+  padding-left: var(--unit-2);
+}

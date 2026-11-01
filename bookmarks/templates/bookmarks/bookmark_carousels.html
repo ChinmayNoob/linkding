@@ -1,0 +1,120 @@
+{% load static %}
+<div class="bookmark-carousels"
+     data-bookmarks-total="{{ bookmark_list.bookmarks_total }}">
+  {% for group in bookmark_list.carousel_groups %}
+    <section class="carousel-group"
+             aria-label="{% if group.is_untagged %}{{ group.name }}{% else %}#{{ group.name }}{% endif %}">
+      <div class="carousel-header">
+        <h2>
+          <a href="?{{ group.query_string }}">
+            {% if group.is_untagged %}
+              {{ group.name }}
+            {% else %}
+              #{{ group.name }}
+            {% endif %}
+          </a>
+        </h2>
+        <span class="carousel-count">{{ group.items|length }}</span>
+      </div>
+      <ul class="bookmark-list carousel{% if bookmark_list.show_notes %} show-notes{% endif %}"
+          role="list"
+          tabindex="-1"
+          style="--ld-bookmark-description-max-lines:{{ bookmark_list.description_max_lines }}">
+        {% for bookmark_item in group.items %}
+          <li data-bookmark-id="{{ bookmark_item.id }}"
+              role="listitem"
+              class="card{% if bookmark_item.css_classes %} {{ bookmark_item.css_classes }}{% endif %}">
+            {% if bookmark_list.show_preview_images %}
+              <div class="card-preview">
+                {% if bookmark_item.preview_image_file %}
+                  <a href="{{ bookmark_item.url }}"
+                     target="{{ bookmark_list.link_target }}"
+                     rel="noopener"
+                     tabindex="-1"
+                     aria-hidden="true">
+                    <img class="preview-image"
+                         src="{% static bookmark_item.preview_image_file %}"
+                         alt=""
+                         loading="lazy" />
+                  </a>
+                {% else %}
+                  <div class="preview-image placeholder">
+                    <div class="img"></div>
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+            <div class="content">
+              <div class="title">
+                <label class="form-checkbox bulk-edit-checkbox">
+                  <input type="checkbox" name="bookmark_id" value="{{ bookmark_item.id }}">
+                  <i class="form-icon"></i>
+                </label>
+                {% if bookmark_item.favicon_file and bookmark_list.show_favicons %}
+                  <img class="favicon" src="{% static bookmark_item.favicon_file %}" alt="">
+                {% endif %}
+                <a href="{{ bookmark_item.url }}"
+                   target="{{ bookmark_list.link_target }}"
+                   rel="noopener">
+                  <span>{{ bookmark_item.title }}</span>
+                </a>
+              </div>
+              {% if bookmark_item.tags %}
+                <div class="tags">
+                  {% for tag in bookmark_item.tags %}<a href="?{{ tag.query_string }}">#{{ tag.name }}</a>{% endfor %}
+                </div>
+              {% endif %}
+              {% if bookmark_item.description %}
+                <div class="description card-description">{{ bookmark_item.description }}</div>
+              {% endif %}
+              <div class="actions">
+                {% if bookmark_item.display_date %}
+                  {% if bookmark_item.snapshot_url %}
+                    <a href="{{ bookmark_item.snapshot_url }}"
+                       title="{{ bookmark_item.snapshot_title }}"
+                       target="{{ bookmark_list.link_target }}"
+                       rel="noopener">{{ bookmark_item.display_date }}</a>
+                  {% else %}
+                    <span>{{ bookmark_item.display_date }}</span>
+                  {% endif %}
+                  <span>|</span>
+                {% endif %}
+                {% if bookmark_list.show_view_action %}
+                  <a href="{{ bookmark_item.details_url }}"
+                     class="view-action"
+                     data-turbo-action="replace"
+                     data-turbo-frame="details-modal">View</a>
+                {% endif %}
+                {% if bookmark_item.is_editable %}
+                  {% if bookmark_list.show_edit_action %}
+                    <a href="{% url 'linkding:bookmarks.edit' bookmark_item.id %}?return_url={{ bookmark_list.return_url|urlencode }}">Edit</a>
+                  {% endif %}
+                  {% if bookmark_list.show_archive_action %}
+                    {% if bookmark_item.is_archived %}
+                      <button type="submit"
+                              name="unarchive"
+                              value="{{ bookmark_item.id }}"
+                              class="btn btn-link btn-sm">Unarchive</button>
+                    {% else %}
+                      <button type="submit"
+                              name="archive"
+                              value="{{ bookmark_item.id }}"
+                              class="btn btn-link btn-sm">Archive</button>
+                    {% endif %}
+                  {% endif %}
+                  {% if bookmark_list.show_remove_action %}
+                    <button data-confirm
+                            type="submit"
+                            name="remove"
+                            value="{{ bookmark_item.id }}"
+                            class="btn btn-link btn-sm">Remove</button>
+                  {% endif %}
+                {% endif %}
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endfor %}
+</div>

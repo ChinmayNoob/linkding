@@ -6,7 +6,11 @@
     {# Bookmark list #}
     <main class="main col-2" aria-labelledby="main-heading">
       <div class="section-header {% if bookmark_list.bulk_edit_enabled %}mb-0{% endif %}">
-        <h1 id="main-heading">{{ bookmark_list.list_title }}</h1>
+        <h1 id="main-heading">
+          {{ bookmark_list.list_title }}
+          <span data-bookmark-count
+                class="bookmark-count text-muted{% if not bookmark_list.bookmarks_total %} d-none{% endif %}">{{ bookmark_list.bookmarks_total }}</span>
+        </h1>
         <div class="header-controls">
           {% bookmark_search bookmark_list.search mode=bookmark_list.search_mode %}
           {% if bookmark_list.can_change_view_mode %}
@@ -18,14 +22,14 @@
               <button type="submit"
                       name="view_mode"
                       value="list"
-                      class="btn{% if not bookmark_list.is_grid %} active{% endif %}"
-                      aria-pressed="{% if bookmark_list.is_grid %}false{% else %}true{% endif %}"
+                      class="btn{% if not bookmark_list.is_grid and not bookmark_list.is_carousel %} active{% endif %}"
+                      aria-pressed="{% if bookmark_list.is_grid or bookmark_list.is_carousel %}false{% else %}true{% endif %}"
                       title="List view"
                       aria-label="List view">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
                   <path d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
-                              </button>
+              </button>
               <button type="submit"
                       name="view_mode"
                       value="grid"
@@ -36,7 +40,18 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true">
                   <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" />
                 </svg>
-                              </button>
+              </button>
+              <button type="submit"
+                      name="view_mode"
+                      value="carousel"
+                      class="btn{% if bookmark_list.is_carousel %} active{% endif %}"
+                      aria-pressed="{% if bookmark_list.is_carousel %}true{% else %}false{% endif %}"
+                      title="Carousel view, grouped by tag"
+                      aria-label="Carousel view">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 6h6v12H3zM11 6h6v12h-6zM19 6h2v12h-2" />
+                </svg>
+              </button>
             </form>
           {% endif %}
           {% if bookmark_list.bulk_edit_enabled %}

@@ -420,7 +420,8 @@ def handle_action(request: HttpRequest, query: QuerySet[Bookmark] = None):
             bookmark_ids = query.only("id").values_list("id", flat=True)
         else:
             # Use only selected bookmarks
-            bookmark_ids = request.POST.getlist("bookmark_id")
+            # The carousel view can submit the same bookmark once per tag
+            bookmark_ids = list(dict.fromkeys(request.POST.getlist("bookmark_id")))
 
         if bulk_action == "bulk_archive":
             return archive_bookmarks(bookmark_ids, request.user)

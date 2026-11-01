@@ -396,9 +396,11 @@ class UserProfile(models.Model):
     ]
     BOOKMARK_VIEW_MODE_LIST = "list"
     BOOKMARK_VIEW_MODE_GRID = "grid"
+    BOOKMARK_VIEW_MODE_CAROUSEL = "carousel"
     BOOKMARK_VIEW_MODE_CHOICES = [
         (BOOKMARK_VIEW_MODE_LIST, "List"),
         (BOOKMARK_VIEW_MODE_GRID, "Grid"),
+        (BOOKMARK_VIEW_MODE_CAROUSEL, "Carousel"),
     ]
     user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
     theme = models.CharField(

@@ -8,8 +8,10 @@ class BookmarkPage extends HeadlessElement {
     this.onBulkActionChange = this.onBulkActionChange.bind(this);
     this.onToggleAll = this.onToggleAll.bind(this);
     this.onToggleBookmark = this.onToggleBookmark.bind(this);
+    this.onCarouselWheel = this.onCarouselWheel.bind(this);
 
     this.oldItems = [];
+    this.carousels = [];
     this.update();
     document.addEventListener("bookmark-list-updated", this.update);
   }
@@ -23,7 +25,66 @@ class BookmarkPage extends HeadlessElement {
     this.updateTooltips(items);
     this.updateNotesToggles(items, this.oldItems);
     this.updateBulkEdit(items, this.oldItems);
+    this.updateBookmarkCount();
+    this.updateCarousels();
     this.oldItems = items;
+  }
+
+  updateBookmarkCount() {
+    // The heading lives outside the list container that is replaced after
+    // actions, so keep its count in sync with the re-rendered list
+    const countElement = this.querySelector("[data-bookmark-count]");
+    if (!countElement) {
+      return;
+    }
+
+    const totalHolder = this.querySelector("[data-bookmarks-total]");
+    const total = parseInt(totalHolder?.dataset.bookmarksTotal, 10) || 0;
+    countElement.classList.toggle("d-none", !total);
+    countElement.textContent = total;
+  }
+
+  updateCarousels() {
+    this.carousels.forEach((carousel) => {
+      carousel.removeEventListener("wheel", this.onCarouselWheel);
+    });
+    this.carousels = Array.from(
+      this.querySelectorAll("ul.bookmark-list.carousel"),
+    );
+    this.carousels.forEach((carousel) => {
+      carousel.addEventListener("wheel", this.onCarouselWheel, {
+        passive: false,
+      });
+    });
+  }
+
+  onCarouselWheel(event) {
+    // Translate vertical mouse wheel input into horizontal scrolling, so that
+    // tag rows can be scrolled without shift+wheel. Horizontal trackpad
+    // gestures already scroll natively.
+    const carousel = event.currentTarget;
+    if (event.deltaY === 0 || Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+      return;
+    }
+
+    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+    // Some browsers report the delta in lines or pages instead of pixels
+    const multiplier =
+      event.deltaMode === 1
+        ? 16
+        : event.deltaMode === 2
+          ? carousel.clientWidth
+          : 1;
+    const delta = event.deltaY * multiplier;
+    const atStart = carousel.scrollLeft <= 0;
+    const atEnd = carousel.scrollLeft >= maxScroll - 1;
+    // At either end, let the page scroll vertically as usual
+    if (maxScroll <= 1 || (delta < 0 && atStart) || (delta > 0 && atEnd)) {
+      return;
+    }
+
+    event.preventDefault();
+    carousel.scrollBy({ left: delta, behavior: "auto" });
   }
 
   updateTooltips(items) {
@@ -124,7 +185,18 @@ class BookmarkPage extends HeadlessElement {
     this.updateExecuteButton();
   }
 
-  onToggleBookmark() {
+  onToggleBookmark(event) {
+    // In the carousel view a bookmark shows up once per tag, keep the
+    // checkboxes of all of its copies in sync
+    const changed = event?.target;
+    if (changed?.value) {
+      this.bookmarkCheckboxes.forEach((checkbox) => {
+        if (checkbox.value === changed.value) {
+          checkbox.checked = changed.checked;
+        }
+      });
+    }
+
     const allChecked = this.bookmarkCheckboxes.every((checkbox) => {
       return checkbox.checked;
     });

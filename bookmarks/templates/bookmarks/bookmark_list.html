@@ -3,6 +3,9 @@
   {% include 'bookmarks/empty_bookmarks.html' %}
 {% else %}
   <section aria-label="Bookmark list">
+    {% if bookmark_list.is_carousel %}
+      {% include 'bookmarks/bookmark_carousels.html' %}
+    {% else %}
     <ul class="bookmark-list{% if bookmark_list.show_notes %} show-notes{% endif %}{% if bookmark_list.is_grid %} grid-view{% endif %}"
         role="list"
         tabindex="-1"
@@ -201,6 +204,7 @@
         </li>
       {% endfor %}
     </ul>
+    {% endif %}
     <div class="bookmark-pagination{% if request.user_profile.sticky_pagination %} sticky{% endif %}">
       {% pagination bookmark_list.bookmarks_page %}
     </div>

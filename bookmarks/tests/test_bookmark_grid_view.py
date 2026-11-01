@@ -139,7 +139,7 @@ class BookmarkViewModeTestCase(TestCase, BookmarkFactoryMixin, HtmlTestMixin):
         self.assertIsNotNone(form)
         self.assertEqual(form["action"], reverse("linkding:bookmarks.view_mode"))
         values = [b["value"] for b in form.select("button[name=view_mode]")]
-        self.assertEqual(values, ["list", "grid"])
+        self.assertEqual(values, ["list", "grid", "carousel"])
         self.assertEqual(form.select_one("button[value=list]")["aria-pressed"], "true")
 
     def test_toggle_marks_active_mode(self):
