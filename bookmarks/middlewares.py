@@ -20,6 +20,7 @@ default_global_settings = GlobalSettings()
 
 standard_profile = UserProfile()
 standard_profile.enable_favicons = True
+standard_profile.enable_preview_images = True
 
 
 class LinkdingMiddleware:

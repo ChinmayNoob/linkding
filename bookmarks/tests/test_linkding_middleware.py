@@ -12,6 +12,10 @@ class LinkdingMiddlewareTestCase(TestCase, BookmarkFactoryMixin):
 
         self.assertEqual(standard_profile, response.wsgi_request.user_profile)
 
+    def test_standard_profile_should_show_favicons_and_preview_images(self):
+        self.assertTrue(standard_profile.enable_favicons)
+        self.assertTrue(standard_profile.enable_preview_images)
+
     def test_unauthenticated_user_should_use_custom_configured_profile(self):
         guest_user = self.setup_user()
         guest_user_profile = guest_user.profile
