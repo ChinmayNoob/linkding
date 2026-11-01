@@ -22,7 +22,7 @@ import re
 import uuid
 from collections.abc import Mapping
 
-import requests
+import requests  # noqa: TID251 - talks to the fixed Cloudflare D1 API URL, not user URLs
 
 apilevel = "2.0"
 threadsafety = 1
@@ -125,9 +125,7 @@ def _adapt_param(value):
     if isinstance(value, uuid.UUID):
         return str(value)
     if isinstance(value, (bytes, bytearray, memoryview)):
-        raise NotSupportedError(
-            "BLOB parameters are not supported by the D1 HTTP API"
-        )
+        raise NotSupportedError("BLOB parameters are not supported by the D1 HTTP API")
     return str(value)
 
 
@@ -206,9 +204,12 @@ class Connection:
             ) from e
 
         if not data.get("success"):
-            messages = "; ".join(
-                error.get("message", str(error)) for error in data.get("errors", [])
-            ) or f"HTTP {response.status_code}"
+            messages = (
+                "; ".join(
+                    error.get("message", str(error)) for error in data.get("errors", [])
+                )
+                or f"HTTP {response.status_code}"
+            )
             raise _map_error_message(messages)
 
         results = data.get("result") or []
